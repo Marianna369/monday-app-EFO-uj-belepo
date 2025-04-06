@@ -7,24 +7,12 @@ import { listItemsQuery, searchItemsQuery } from "./queries";
 const monday = mondaySdk();
 const pageSize = 25;
 
-let iktatvaColumnId = null as string;
-let iktatvaStatusId = null as number;
-let torolveStatusId = null as number;
 let searchColumnId = null as string;
-let filesColumnId = null as string;
 
 const MondayApi = {
     init: {
-        setIktatvaStatus: (columnId: string, iktatvaId: number, torolveId: number) => {
-            iktatvaColumnId = columnId;
-            iktatvaStatusId = iktatvaId;
-            torolveStatusId = torolveId;
-        },
         setSearchColumn: (columnId: string) => {
             searchColumnId = columnId;
-        },
-        setFilesColumnId: (columnId: string) => {
-            filesColumnId = columnId;
         }
     },
 
@@ -65,27 +53,23 @@ const MondayApi = {
         return queryRes.data.boards.flatMap((x: any) => x.items_page.items);
     },
 
-    getMainBoardItems: async(mainBoardId: number, searchTerm: string, groupId: string, structure: MainBoardStructure) : Promise<MainBoardItemPage> => {
+    getMainBoardItems: async(mainBoardId: number, searchTerm: string, structure: MainBoardStructure) : Promise<MainBoardItemPage> => {
         const query = searchTerm?.trim()
             ? searchItemsQuery
             : listItemsQuery;
 
+        console.log("Haliho");
         const variables = {
             boardIds: [mainBoardId],
-            groupIds: [groupId],
             pageSize: pageSize,
-            iktatvaColumnId: iktatvaColumnId,
-            iktatvaStatusId: iktatvaStatusId,
-            torolveStatusId: torolveStatusId,
-            filesColumnIdAsArray: [filesColumnId],
             searchColumnId: searchColumnId,
             searchTerm: searchTerm
         }
 
         const queryRes = await monday.api(query, {variables: variables});
-        const items: MainBoardItemRaw[] = queryRes.data.boards[0].groups[0].items_page.items;
+        const items: MainBoardItemRaw[] = queryRes.data.boards[0].items_page.items;
         return {
-            Cursor: queryRes.data.boards[0].groups[0].items_page.cursor,
+            Cursor: queryRes.data.boards[0].items_page.cursor,
             Items: items.map(x => mapMainBoardItem(x, structure))
         };
     },
@@ -122,6 +106,7 @@ const MondayApi = {
     },
 
     getMainBoardStructure: async (boardId: number): Promise<MainBoardStructure> => {
+        console.log("Hejho");
         const query = `query {
             boards(ids: ${boardId}) {
                 columns {
@@ -143,7 +128,9 @@ const MondayApi = {
         }`;
         
         const queryRes = await monday.api(query);
-        const cols: {id:string,settings_str:string}[] = queryRes.data.boards[0].columns;
+        console.log(queryRes);
+        const cols: {id:string,settings_str:string}[] = queryRes.data.boards[0].columns;        
+        console.log(cols);
         const users: {id:string, name:string, photo_thumb_small: string, picture_url: string}[] = queryRes.data.users;
         const teams: { id: string; name: string; picture_url: string;}[] = queryRes.data.teams;
         return mapBoardStructure(cols, users, teams);
@@ -176,22 +163,6 @@ const MondayApi = {
                 }
             }`;
         }
-
-        try {
-            await monday.api(query);
-        }
-        catch(error: any) {
-            console.error(error.data.errorMessage);
-        }
-    },
-
-    changeMainBoardItemKiszignalasCimzettje: async (mainBoardId: number, itemId: number , columnId: string, newValue: string[]) => {
-        const value = newValue.map(x => `{\\"id\\":\\"${x.substring(1)}\\",\\"kind\\":\\"${x.startsWith("T") ? "team" : "person"}\\"}`).join(",");
-        const query = `mutation {
-            change_multiple_column_values(item_id:${itemId}, board_id:${mainBoardId}, column_values: "{\\"${columnId}\\" : {\\"personsAndTeams\\":[${value}]}}") {
-                id
-            }
-        }`;
 
         try {
             await monday.api(query);

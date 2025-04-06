@@ -8,8 +8,6 @@ const state = reactive({
     structure: null as MainBoardStructure
 });
 
-MondayApi.init.setIktatvaStatus(import.meta.env.VITE_COLUMN_ID_IKTATVA, parseInt(import.meta.env.VITE_IKTATVA_STATUS_ID), parseInt(import.meta.env.VITE_TOROLVE_STATUS_ID));
-MondayApi.init.setFilesColumnId(import.meta.env.VITE_COLUMN_ID_FILES)
 MondayApi.init.setSearchColumn(import.meta.env.VITE_COLUMN_ID_NAME);
 
 onMounted(async () => {
@@ -30,7 +28,7 @@ onMounted(async () => {
                 />
         </div>
         <div v-else>
-            <ListPage :structure="state.structure" />
+            <ListItemNew :structure="state.structure" />
         </div>
     </div>
 </template>
