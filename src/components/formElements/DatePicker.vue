@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ColumnValue } from '@/plugins/types';
 import moment from 'moment';
-import { computed, reactive, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 
     const props = defineProps<{
         label: string, 
@@ -10,12 +10,20 @@ import { computed, reactive, watch } from 'vue';
 
     const emit = defineEmits(["change"]);
 
-    const displayDate = computed(() => state.value ? moment(state.value).format("YYYY-MM-DD") : null);
-
-    const state = reactive({
+    const state = reactive<{
+        value: Date | null,
+        isPickerVisible: boolean,
+        isSaving: boolean
+    }>({
         value: props.value.ColumnValue,
         isPickerVisible: false,
         isSaving: false
+    });
+
+    //const displayDate = computed(() => state.value ? moment(state.value).format("YYYY-MM-DD") : null);
+    const textInput = ref(state.value ? moment(state.value).format("YYYY.MM.DD") : '');
+    const isValidDate = computed(() => {
+        return textInput.value === '' || moment(textInput.value, 'YYYY.MM.DD', true).isValid();
     });
 
     watch(() => props.value.ColumnValue, () => {
@@ -24,10 +32,32 @@ import { computed, reactive, watch } from 'vue';
         state.isSaving = false;
     });
 
+    watch(() => state.value, (newVal) => {
+        textInput.value = newVal ? moment(newVal).format("YYYY.MM.DD") : '';
+    });
+
+    watch(textInput, (newVal) => {
+        const parsed = moment(newVal, 'YYYY.MM.DD', true);
+        if (parsed.isValid()) {
+            const date = parsed.toDate();
+            if (!moment(state.value).isSame(date)) {
+                state.value = date;
+                onChange(date); 
+            }
+        }
+    });
+
+    const onCalendarSelect = (newDate: Date) => {
+        if (!moment(state.value).isSame(newDate)) {
+            state.value = newDate;
+            textInput.value = moment(newDate).format('YYYY.MM.DD');
+            onChange(newDate);
+        }
+    };
+
     const onChange = (newValue: Date) => {
         if(props.value.ColumnValue != newValue) {
-            emit('change', props.value.ColumnId, newValue ? moment(newValue).format("YYYY-MM-DD") : null);
-            state.value = newValue;
+            emit('change', props.value.ColumnId, newValue ? moment(newValue).format("YYYY.MM.DD") : null);
             state.isPickerVisible = false;
             state.isSaving = true;
         }
@@ -36,17 +66,19 @@ import { computed, reactive, watch } from 'vue';
 
 <template>
     <v-menu v-model="state.isPickerVisible" :close-on-content-click="false">
-        <template v-slot:activator="{props: on}">
+        <template v-slot:activator>
             <v-text-field 
                 :label="props.label" 
-                v-bind="on" 
-                :model-value="displayDate" 
+                v-model="textInput" 
                 :loading="state.isSaving"
                 variant="outlined" 
                 density="comfortable"
-                hide-details
-                readonly></v-text-field>
+                :error="!isValidDate"
+                :error-messages="!isValidDate ? ['Hibás dátumformátum (YYYY.MM.DD)'] : []"
+                hide-details="auto"
+                @click="state.isPickerVisible = true"
+            ></v-text-field>
         </template>
-        <v-date-picker :model-value="state.value" @update:model-value="onChange" elevation="4"></v-date-picker>
+        <v-date-picker :model-value="state.value" @update:model-value="onCalendarSelect" elevation="4"></v-date-picker>
     </v-menu>
 </template>

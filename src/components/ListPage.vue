@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { ColumnType, ColumnValueCommon, DropdownColumn, MainBoardItem, MainBoardStructure } from '@/plugins/types';
-import { computed, onMounted, reactive, watch } from 'vue';
+import { MainBoardItem, MainBoardStructure } from '@/plugins/types';
+import { computed, onMounted, reactive } from 'vue';
 import ListItemEditor from './ListItemEditor.vue';
 import MondayApi from '@/plugins/MondayApi';
 import ListItemDisplay from './ListItemDisplay.vue';
@@ -25,7 +25,6 @@ onMounted(async () => {
 })
 
 const resetList = async () => {
-    console.log("resetList");
     state.isLoading = true; 
     state.activeItemIndex = null;
     state.currentPage = 0;

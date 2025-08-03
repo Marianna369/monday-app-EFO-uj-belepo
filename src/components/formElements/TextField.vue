@@ -2,9 +2,13 @@
 import { ColumnValue } from '@/plugins/types';
 import { reactive, watch } from 'vue';
 
+    type ValidationResult = string | boolean;
+    type ValidationRule$1 = ValidationResult | PromiseLike<ValidationResult> | ((value: any) => ValidationResult) | ((value: any) => PromiseLike<ValidationResult>);
+
     const props = defineProps<{
         label: string, 
         value: ColumnValue<string>,
+        rules?: ValidationRule$1[] ,
         email?: boolean,
         onBeforeSave?: (str: string) => string
     }>();
@@ -15,10 +19,6 @@ import { reactive, watch } from 'vue';
         value: props.value?.ColumnValue,
         isSaving: false
     });
-
-    const validationRules = [
-        (val: string) => !props.email || isEmail(val) || "Invalid email"
-    ]
 
     const isEmail = (str: string) => {
         const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -48,7 +48,7 @@ import { reactive, watch } from 'vue';
         :label="`${props.label}`" 
         v-model="state.value" 
         :loading="state.isSaving" 
-        :rules="validationRules" 
+        :rules="rules" 
         variant="outlined" 
         density="comfortable"
         hide-details 

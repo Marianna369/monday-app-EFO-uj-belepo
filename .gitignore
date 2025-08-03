@@ -1,1 +1,25 @@
-node_modules/*
+# Node.js
+node_modules/
+dist/
+.env
+
+# Log fájlok
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Vite / frontend
+.vite/
+
+# ZIP fájlok
+*.zip
+
+# VSCode
+.vscode/
+
+# TypeScript build
+*.tsbuildinfo
+
+# MacOS/Linux/Windows által generált felesleges fájlok
+.DS_Store
+Thumbs.db

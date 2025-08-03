@@ -2,11 +2,7 @@
 import { MainBoardItem, MainBoardStructure } from '@/plugins/types';
 import TextField from './formElements/TextField.vue';
 import DatePicker from './formElements/DatePicker.vue';
-import Dropdown from './formElements/Dropdown.vue';
-import Attachments from './formElements/Attachments.vue';
-import { computed, reactive, Ref, watch } from 'vue';
-import moment from 'moment';
-import DropdownMultiple from './formElements/DropdownMultiple.vue';
+import { computed, reactive, Ref } from 'vue';
 
 const props = defineProps<{
     item: MainBoardItem, 
@@ -60,9 +56,6 @@ const onDeleteConfirm = (dialogActive: Ref<boolean, boolean>) => {
             </v-col>
             <v-col cols="2">
                 <DatePicker label="Születési idő" :value="props.item.Szuletesi_ido" @change="onColumnValueChange" />
-            </v-col>
-            <v-col cols="4">
-                <TextField label="EFO_igénylő" :value="props.item.EFO_igenylo" @change="onColumnValueChange" />
             </v-col>
         </v-row>
 

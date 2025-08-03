@@ -9,9 +9,23 @@ interface ImportMetaEnv {
   readonly VITE_TABLE_ID: number;
 
   readonly VITE_COLUMN_ID_NAME: string;
+  readonly VITE_COLUMN_ID_ADOAZONOSITO: string;
   readonly VITE_COLUMN_ID_SZULETESI_IDO: string;
   readonly VITE_COLUMN_ID_SZULETESI_HELY: string;
   readonly VITE_COLUMN_ID_EFO_IGENYLO: string;
+  readonly VITE_COLUMN_ID_EFO_JOVAHAGYO: string;
+  readonly VITE_COLUMN_ID_MUNKAKOR: string;
+  readonly VITE_COLUMN_ID_KOLTSEGHELY: string;
+  readonly VITE_COLUMN_ID_SZULETESI_NEV: string;
+  readonly VITE_COLUMN_ID_ANYJA_NEVE: string;
+  readonly VITE_COLUMN_ID_LAKCIM: string;
+  readonly VITE_COLUMN_ID_ALLAMPOLGARSAG: string;
+  readonly VITE_COLUMN_ID_TAJSZAM: string;
+  readonly VITE_COLUMN_ID_BANKSZAMLASZAM: string;
+
+  readonly VITE_COLUMN_ID_EFO_IGENYLO_KTG: string;
+  readonly VITE_COLUMN_ID_EFO_JOVAHAGYO_KTG: string;
+  readonly VITE_MARIANNA_API_TOKEN: string;
 }
 
 interface ImportMeta {

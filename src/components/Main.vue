@@ -1,19 +1,37 @@
 <script lang="ts" setup>
 import MondayApi from '@/plugins/MondayApi';
-import { MainBoardStructure } from '@/plugins/types';
+import { ColumnType, MainBoardItem, MainBoardStructure } from '@/plugins/types';
 import { onMounted, reactive } from 'vue';
-import ListPage from './ListPage.vue';
+import ListItemNew from './ListItemNew.vue';
 
 const state = reactive({
-    structure: null as MainBoardStructure
+    structure: null as MainBoardStructure,
+    Item: null as MainBoardItem
 });
 
 MondayApi.init.setSearchColumn(import.meta.env.VITE_COLUMN_ID_NAME);
 
 onMounted(async () => {
     state.structure = await MondayApi.getMainBoardStructure(import.meta.env.VITE_TABLE_ID);
+    state.Item = {
+    Id: null as number,
+    Name: {ColumnId: 'VITE_COLUMN_ID_NAME', ColumnValue: "", ColumnType: ColumnType.String, ColumnValid: false},
+    Adoazonosito: {ColumnId: 'VITE_COLUMN_ID_ADOAZONOSITO', ColumnValue: "", ColumnType: ColumnType.String, ColumnValid: false},
+    Szuletesi_ido: {ColumnId: 'VITE_COLUMN_ID_SZULETESI_IDO', ColumnValue: null as Date, ColumnType: ColumnType.Date, ColumnValid: false},
+    Szuletesi_hely: {ColumnId: 'VITE_COLUMN_ID_SZULETESI_HELY', ColumnValue: "", ColumnType: ColumnType.String, ColumnValid: false},
+    //EFO_igenylo: {ColumnId: 'VITE_COLUMN_ID_EFO_IGENYLO', ColumnValue:  {caption: me.name, value: me.email}, ColumnType: ColumnType.User},
+    EFO_igenylo: {ColumnId: 'VITE_COLUMN_ID_EFO_IGENYLO', ColumnValue:  {caption: "", value: ""}, ColumnType: ColumnType.User, ColumnValid: false},
+    EFO_jovahagyo: {ColumnId: 'VITE_COLUMN_ID_EFO_JOVAHAGYO', ColumnValue: [], ColumnType: ColumnType.User, ColumnValid: false},
+    Munkakor: {ColumnId: 'VITE_COLUMN_ID_MUNKAKOR', ColumnValue:  {caption: "", value: ""}, ColumnType: ColumnType.Dropdown, ColumnValid: false},
+    Koltseghely: {ColumnId: 'VITE_COLUMN_ID_KOLTSEGHELY', ColumnValue:  {caption: "", value: ""}, ColumnType: ColumnType.Dropdown, ColumnValid: false},    
+    Szuletesi_nev: {ColumnId: 'VITE_COLUMN_ID_SZULETESI_NEV', ColumnValue: "", ColumnType: ColumnType.String, ColumnValid: false},
+    Anyja_neve: {ColumnId: 'VITE_COLUMN_ID_ANYJA_NEVE', ColumnValue: "", ColumnType: ColumnType.String, ColumnValid: false},
+    Lakcim: {ColumnId: 'VITE_COLUMN_ID_LAKCIM', ColumnValue: "", ColumnType: ColumnType.String, ColumnValid: false},
+    Allampolgarsag: {ColumnId: 'VITE_COLUMN_ID_ALLAMPOLGARSAG', ColumnValue: "", ColumnType: ColumnType.String, ColumnValid: false},
+    Tajszam: {ColumnId: 'VITE_COLUMN_ID_TAJSZAM', ColumnValue: "", ColumnType: ColumnType.String, ColumnValid: false},
+    Bankszamlaszam: {ColumnId: 'VITE_COLUMN_ID_BANKSZAMLASZAM', ColumnValue: "", ColumnType: ColumnType.String, ColumnValid: false},
+} as MainBoardItem
 });
-
 
 </script>
 
@@ -28,7 +46,11 @@ onMounted(async () => {
                 />
         </div>
         <div v-else>
-            <ListItemNew :structure="state.structure" />
+                <ListItemNew 
+                v-if="state.Item"
+                    :item='state.Item' 
+                    :structure="state.structure" 
+                    class="flex-grow-1" />                        
         </div>
     </div>
 </template>

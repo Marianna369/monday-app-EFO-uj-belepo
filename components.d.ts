@@ -8,13 +8,11 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Attachments: typeof import('./src/components/formElements/Attachments.vue')['default']
-    copy: typeof import('./src/components/ListItemNew.vue')['default']
     DatePicker: typeof import('./src/components/formElements/DatePicker.vue')['default']
     Dropdown: typeof import('./src/components/formElements/Dropdown.vue')['default']
     DropdownDisplay: typeof import('./src/components/formElements/DropdownDisplay.vue')['default']
     DropdownMultiple: typeof import('./src/components/formElements/DropdownMultiple.vue')['default']
     FileUploadButton: typeof import('./src/components/formElements/FileUploadButton.vue')['default']
-    ListItemDisplay: typeof import('./src/components/ListItemDisplay.vue')['default']
     ListItemEditor: typeof import('./src/components/ListItemEditor.vue')['default']
     ListItemNew: typeof import('./src/components/ListItemNew.vue')['default']
     ListPage: typeof import('./src/components/ListPage.vue')['default']
