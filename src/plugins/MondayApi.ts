@@ -293,9 +293,9 @@ const MondayApi = {
                 id
             }
         }`;
-
+        console.log(query);
         try {
-            const response = await fetch('https://your-backend-url/api/create-monday-item', {
+            const response = await fetch('https://monday-app-efo-uj-belepo.vercel.app/api/create-monday-item', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
