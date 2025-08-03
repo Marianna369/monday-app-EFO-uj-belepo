@@ -14,6 +14,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({ query }),
     });
+    console.log('Monday API raw response:', response);
 
     // Ha a HTTP státusz nem 200-299, akkor hibát dobunk
     if (!response.ok) {
@@ -23,6 +24,7 @@ export default async function handler(req, res) {
     }
 
     const data = await response.json();
+    console.log('Monday API raw response:', data);
 
     // Ha nincs "data" mező, logoljuk
     if (!data || !data.data) {
