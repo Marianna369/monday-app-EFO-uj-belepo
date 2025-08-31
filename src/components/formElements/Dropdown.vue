@@ -2,49 +2,77 @@
 import { ColumnValue, DropdownOption } from '@/plugins/types';
 import { computed, nextTick, reactive, ref, watch } from 'vue';
 
-    const props = defineProps<{
-        label: string, 
-        value: ColumnValue<DropdownOption> | null,
-        options: DropdownOption[],
-        searchable?: boolean
-    }>();
-    
-    const emit = defineEmits<{
-        change: [columnId: string, newValue: string]
-    }>();
+const props = defineProps<{
+    label: string, 
+    value: ColumnValue<DropdownOption> | null,
+    options: DropdownOption[],
+    searchable?: boolean
+}>();
 
-    const state = reactive({
-        value: props.value.ColumnValue,
-        isSaving: false,
-        isOpen: false,
-        searchText: ""
-    });
+const emit = defineEmits<{
+    change: [columnId: string, newValue: string],
+    search: [searchText: string]
+}>();
 
-    const visibleOptions = computed(() => props.options.filter(x => x.caption.toLowerCase().includes(state.searchText.trim().toLowerCase())));
+const state = reactive({
+    value: props.value.ColumnValue,
+    isSaving: false,
+    isOpen: false,
+    searchText: ""
+});
 
-    const onSave = (item: DropdownOption) => {
-        state.isOpen = false;
-        state.searchText = "";
-        if(item.value != props.value.ColumnValue?.value) {
-            emit('change', props.value.ColumnId, item.value);
-            state.value = item;
-            state.isSaving = true;
-        }
+const visibleOptions = computed(() => {
+    if (state.searchText.length >= 2) {
+        return props.options;
     }
 
-    watch(() => props.value.ColumnValue, () => {
-        state.value = props.value.ColumnValue;
-        state.isSaving = false;
-    });
+    if (props.searchable) {
+        return props.options.filter(x =>
+            x.caption.toLowerCase().includes(state.searchText.trim().toLowerCase())
+        );
+    }
 
-    watch(() => state.isOpen, async (isOpen) => {
-        await nextTick();
-        if(isOpen && searchInput.value) {
-            setTimeout(() => searchInput.value.focus(), 100);
-        }
-    })
+    return props.options;
+});
 
-    const searchInput = ref(null);
+const onSave = (item: DropdownOption) => {
+    state.isOpen = false;
+    state.searchText = "";
+    if(item.value != props.value.ColumnValue?.value) {
+        emit('change', props.value.ColumnId, item.value);
+        state.value = item;
+        state.isSaving = true;
+    }
+};
+
+watch(() => props.value.ColumnValue, () => {
+    state.value = props.value.ColumnValue;
+    state.isSaving = false;
+});
+
+watch(() => state.isOpen, async (isOpen) => {
+    await nextTick();
+    if(isOpen && searchInput.value) {
+        setTimeout(() => searchInput.value.focus(), 100);
+    }
+});
+
+const searchInput = ref(null);
+
+// --- Debounce kereséshez ---
+let searchDebounceTimer: ReturnType<typeof setTimeout> | null = null;
+
+watch(() => state.searchText, (val) => {
+    if (searchDebounceTimer) {
+        clearTimeout(searchDebounceTimer);
+    }
+
+    if (val.length >= 2) {
+        searchDebounceTimer = setTimeout(() => {
+            emit('search', val);
+        }, 300); // Debounce idő (ms)
+    }
+});
 </script>
 
 <template>

@@ -187,10 +187,12 @@ const onKoltseghelyChange = (columnId: string, newValue: string) => {
     column.ColumnValue=props.structure.Koltseghely.options.filter(x => x.value == newValue)[0];
 }
 
-//const onEFO_jovahagyoChange = (columnId: string, newValue: string[]) => {
-//    const column = Object.values(props.item).find(x => x && x.ColumnId == columnId);
-//    column.ColumnValue=props.structure.EFO_jovahagyo.options.filter(x => newValue.includes(x.value));
-//}
+/*
+const onEFO_jovahagyoChange = (columnId: string, newValue: string[]) => {
+    const column = Object.values(props.item).find(x => x && x.ColumnId == columnId);
+    column.ColumnValue=props.structure.EFO_jovahagyo.options.filter(x => newValue.includes(x.value));
+}
+*/
 
 const onMunkakorChange = (columnId: string, newValue: string) => {
     const column = Object.values(props.item).find(x => x && x.ColumnId == columnId);
@@ -258,7 +260,6 @@ const onKoltseghelySearch = async (searchText: string) => {
         <v-row>
             <v-col cols="6">
                 <Dropdown label="Költséghely *" :value="props.item.Koltseghely" :options="state.koltseghelyOptions" :searchable="true" @change="onKoltseghelyChange" @search="onKoltseghelySearch" />
-
             </v-col>
         </v-row>
         <v-row>

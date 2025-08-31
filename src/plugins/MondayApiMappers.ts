@@ -175,6 +175,7 @@ const mapUserBoardItemValue = (column: DropdownColumn, item: MainBoardItemRaw): 
     };
 }
 
+/*
 const mapUserBoardItemValueMultiple = (column: DropdownColumn, item: MainBoardItemRaw): ColumnValue<DropdownOption[]> => {
     let option: DropdownOption[] = [];
     const valStr = item.column_values.find(x => x.id == column.id).value;
@@ -190,6 +191,7 @@ const mapUserBoardItemValueMultiple = (column: DropdownColumn, item: MainBoardIt
         ColumnValid: true
     };
 }
+*/
 
 export const mapAttachment = (attachment: {id: string, name: string, file_extension: string, url: string, url_thumbnail: string}) : Attachment => {
     return {
