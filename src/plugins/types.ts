@@ -26,7 +26,7 @@ export interface DropdownOption {
 
 export interface MainBoardStructure {
     EFO_igenylo: DropdownColumn;
-    EFO_jovahagyo: DropdownColumn;
+    //EFO_jovahagyo: DropdownColumn;
     Munkakor: DropdownColumn;
     Koltseghely: DropdownColumn;
     Szurt_koltseghely: DropdownColumn;
@@ -61,7 +61,7 @@ export interface MainBoardItem {
     Szuletesi_ido: ColumnValue<Date>;
     Szuletesi_hely: ColumnValue<string>;
     EFO_igenylo: ColumnValue<DropdownOption>;
-    EFO_jovahagyo: ColumnValue<DropdownOption[]>;
+    //EFO_jovahagyo: ColumnValue<DropdownOption[]>;
     Munkakor: ColumnValue<DropdownOption>;
     Koltseghely: ColumnValue<DropdownOption>;
     Szuletesi_nev: ColumnValue<string>;

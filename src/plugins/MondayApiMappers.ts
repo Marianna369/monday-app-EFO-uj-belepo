@@ -4,7 +4,7 @@ import { MainBoardStructure, ColumnValue, DropdownColumn, DropdownOption, MainBo
 export const mapBoardStructure = async (cols: { id: string; settings_str: string; }[], users: { id: string; name: string; email:string, teams: { id: string; name: string;}[], photo_thumb_small: string}[], teams: { id: string; name: string; picture_url: string;}[]): Promise<MainBoardStructure> => {
     return {
         EFO_igenylo: mapPeopleColumn(cols.find(x => x.id == import.meta.env.VITE_COLUMN_ID_EFO_IGENYLO), users, []),
-        EFO_jovahagyo: mapPeopleColumn(cols.find(x => x.id == import.meta.env.VITE_COLUMN_ID_EFO_JOVAHAGYO), users, teams),
+        //EFO_jovahagyo: mapPeopleColumn(cols.find(x => x.id == import.meta.env.VITE_COLUMN_ID_EFO_JOVAHAGYO), users, teams),
         Munkakor: await mapDropdownColumn(cols.find(x => x.id == import.meta.env.VITE_COLUMN_ID_MUNKAKOR)!),
         Koltseghely: await mapBoardRelationColumn(cols.find(x => x.id == import.meta.env.VITE_COLUMN_ID_KOLTSEGHELY)!),
         Szurt_koltseghely: await mapBoardRelationColumn(cols.find(x => x.id == import.meta.env.VITE_COLUMN_ID_KOLTSEGHELY)!)
@@ -82,7 +82,7 @@ export const mapMainBoardItem = (item: MainBoardItemRaw, structure: MainBoardStr
         Szuletesi_ido: mapDateBoardItemValue(import.meta.env.VITE_COLUMN_ID_SZULETESI_IDO, item),
         Szuletesi_hely: mapStringBoardItemValue(import.meta.env.VITE_COLUMN_ID_SZULETESI_HELY, item),
         EFO_igenylo: mapUserBoardItemValue(structure.EFO_igenylo, item),
-        EFO_jovahagyo: mapUserBoardItemValueMultiple(structure.EFO_jovahagyo, item),
+        //EFO_jovahagyo: mapUserBoardItemValueMultiple(structure.EFO_jovahagyo, item),
         Munkakor: mapDropdownBoardItemValue(structure.Munkakor, item),
         Koltseghely: mapConnectedBoardItemValue(structure.Koltseghely, item),
         Szuletesi_nev: mapStringBoardItemValue(import.meta.env.VITE_COLUMN_ID_SZULETESI_NEV, item),

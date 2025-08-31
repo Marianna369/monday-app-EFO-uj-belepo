@@ -1,6 +1,6 @@
 import mondaySdk from "monday-sdk-js";
 import { mapAttachment, mapBoardStructure, mapMainBoardItem } from "./MondayApiMappers";
-import { MainBoardStructure,  MainBoardItemRaw, SimpleBoardItem, MainBoardItemPage, FullBoardItem, MainBoardItem, UserItem } from "./types";
+import { MainBoardStructure,  MainBoardItemRaw, SimpleBoardItem, MainBoardItemPage, FullBoardItem, MainBoardItem, UserItem, DropdownOption } from "./types";
 import { listItemsQuery, searchItemsQuery } from "./queries";
 
 // Usage of mondaySDK example, for more information visit here: https://developer.monday.com/apps/docs/introduction-to-the-sdk/
@@ -215,6 +215,36 @@ const MondayApi = {
         return queryRes.data.me;
     },
     
+    getFilteredKoltseghelyek: async (boardId: number, columnId: string, searchTerm: string): Promise<DropdownOption[]> => {
+        const query = `
+            query {
+                items_by_column_values(
+                    board_id: ${boardId},
+                    column_id: "${columnId}",
+                    column_value: "${searchTerm}"
+                ) {
+                    id
+                    name
+                    column_values {
+                        id
+                        text
+                        value
+                    }
+                }
+            }
+        `;
+
+        const result = await monday.api(query);
+        const items = result?.data?.items_by_column_values ?? [];
+
+        return items.map((item: any) => ({
+            value: item.id,
+            caption: item.name,
+            additionalInfo: item.column_values.find((v: any) => v.id === import.meta.env.VITE_COLUMN_ID_EFO_IGENYLO_KTG)?.text ?? "",
+            thumb: item.column_values.find((v: any) => v.id === import.meta.env.VITE_COLUMN_ID_EFO_JOVAHAGYO_KTG)?.text ?? ""
+        })) as DropdownOption[];
+    },
+
     changeMainBoardItem: async (structure: MainBoardStructure, mainBoardId: number, itemId: number , columnId: string, newValue: string) => {
         const column = Object.values(structure).find(x => x.id == columnId);
         
@@ -263,14 +293,14 @@ const MondayApi = {
             return `${year}-${month}-${day}`;
         }
 
-        const persons = item.EFO_jovahagyo.ColumnValue.map(x => x.value).join(",");
+        //const persons = item.EFO_jovahagyo.ColumnValue.map(x => x.value).join(",");
         const column_value_obj: Record<string, any> = {
             [import.meta.env.VITE_COLUMN_ID_SZULETESI_IDO]: {
                 date: formatDateOnlyForMonday(new Date(item.Szuletesi_ido.ColumnValue))
             },
             [import.meta.env.VITE_COLUMN_ID_ADOAZONOSITO]: item.Adoazonosito.ColumnValue,
             [import.meta.env.VITE_COLUMN_ID_EFO_IGENYLO]: item.EFO_igenylo.ColumnValue.value,
-            [import.meta.env.VITE_COLUMN_ID_EFO_JOVAHAGYO]: persons,
+            //[import.meta.env.VITE_COLUMN_ID_EFO_JOVAHAGYO]: persons,
             [import.meta.env.VITE_COLUMN_ID_SZULETESI_HELY]: item.Szuletesi_hely.ColumnValue,
             [import.meta.env.VITE_COLUMN_ID_MUNKAKOR]: item.Munkakor.ColumnValue.caption,
             [import.meta.env.VITE_COLUMN_ID_SZULETESI_NEV]: item.Szuletesi_nev.ColumnValue,

@@ -17,6 +17,7 @@ onMounted(async () => {
     state.adoazonositok = await MondayApi.getAdoazonositok(import.meta.env.VITE_TABLE_ID, import.meta.env.VITE_COLUMN_ID_ADOAZONOSITO);
     props.item.EFO_igenylo.ColumnValue = props.structure.EFO_igenylo.options.find(x => x.value == me.email);
     props.item.Munkakor.ColumnValue = props.structure.Munkakor.options.find(x => x.caption.toLowerCase() == "Takarító".toLowerCase());
+    props.item.Allampolgarsag.ColumnValue = "magyar";
 });
 
 const state = reactive({
@@ -25,7 +26,8 @@ const state = reactive({
     dialogAfterSave : false,
     dialogTitle: '',
     dialogText: '',
-    adoazonositok: []
+    adoazonositok: [],
+    koltseghelyOptions: []
 });
 
 const canFileDocument = computed(() => {
@@ -35,7 +37,8 @@ const canFileDocument = computed(() => {
 
 const onFelvitelClick = async () => {
     if(props.item.Name.ColumnValue != "" && props.item.Adoazonosito.ColumnValue != "" && AdoazonositoEll(props.item.Adoazonosito.ColumnValue) 
-        && props.item.Szuletesi_ido.ColumnValue != null as Date && Array.isArray(props.item.EFO_jovahagyo.ColumnValue) && props.item.EFO_jovahagyo.ColumnValue.length > 0
+        //&& props.item.Szuletesi_ido.ColumnValue != null as Date && Array.isArray(props.item.EFO_jovahagyo.ColumnValue) && props.item.EFO_jovahagyo.ColumnValue.length > 0
+        && props.item.Szuletesi_ido.ColumnValue != null as Date
         && props.item.Szuletesi_hely.ColumnValue != "" && props.item.Szuletesi_nev.ColumnValue != "" && props.item.Anyja_neve.ColumnValue != ""
         && props.item.Lakcim.ColumnValue != "" && props.item.Allampolgarsag.ColumnValue != "" && props.item.Tajszam.ColumnValue != "" && TajszamEll(props.item.Tajszam.ColumnValue)
         && props.item.Bankszamlaszam.ColumnValue != "" && BankszamlaszamEll(props.item.Bankszamlaszam.ColumnValue)
@@ -184,15 +187,44 @@ const onKoltseghelyChange = (columnId: string, newValue: string) => {
     column.ColumnValue=props.structure.Koltseghely.options.filter(x => x.value == newValue)[0];
 }
 
-const onEFO_jovahagyoChange = (columnId: string, newValue: string[]) => {
-    const column = Object.values(props.item).find(x => x && x.ColumnId == columnId);
-    column.ColumnValue=props.structure.EFO_jovahagyo.options.filter(x => newValue.includes(x.value));
-}
+//const onEFO_jovahagyoChange = (columnId: string, newValue: string[]) => {
+//    const column = Object.values(props.item).find(x => x && x.ColumnId == columnId);
+//    column.ColumnValue=props.structure.EFO_jovahagyo.options.filter(x => newValue.includes(x.value));
+//}
 
 const onMunkakorChange = (columnId: string, newValue: string) => {
     const column = Object.values(props.item).find(x => x && x.ColumnId == columnId);
     column.ColumnValue=props.structure.Munkakor.options.filter(x => x.value == newValue)[0];
 }
+
+const onKoltseghelySearch = async (searchText: string) => {
+    if (!searchText || searchText.length < 2) {
+        state.koltseghelyOptions = [];
+        return;
+    }
+
+    state.isLoading = true;
+    try {
+        const response = await fetch(`/api/koltseghelyek?search=${encodeURIComponent(searchText)}`);
+        if (!response.ok) {
+            throw new Error(`Sikertelen lekérdezés: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        // Alakítsd át az adatokat a dropdown elvárásainak megfelelően
+        state.koltseghelyOptions = data.map((item: any) => ({
+            caption: item.caption,
+            value: item.value,
+            additionalInfo: item.additionalInfo || "",
+        }));
+    } catch (error) {
+        console.error("Költséghely keresési hiba:", error);
+        state.koltseghelyOptions = [];
+    } finally {
+        state.isLoading = false;
+    }
+};
 
 </script>
 
@@ -220,17 +252,13 @@ const onMunkakorChange = (columnId: string, newValue: string) => {
         </v-row>
         <v-row>
             <v-col cols="6">
-                <DropdownMultiple label="EFO jóváhagyó *" :value="props.item.EFO_jovahagyo" :options="structure.EFO_jovahagyo.options" :searchable="true" @change="onEFO_jovahagyoChange" />
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col cols="6">
                 <Dropdown label="Munkakör *" :value="props.item.Munkakor" :options="structure.Munkakor.options" :searchable="true" @change="onMunkakorChange" />
             </v-col>
         </v-row>
         <v-row>
             <v-col cols="6">
-                <Dropdown label="Költséghely *" :value="props.item.Koltseghely" :options="structure.Szurt_koltseghely.options" :searchable="true" @change="onKoltseghelyChange" />
+                <Dropdown label="Költséghely *" :value="props.item.Koltseghely" :options="state.koltseghelyOptions" :searchable="true" @change="onKoltseghelyChange" @search="onKoltseghelySearch" />
+
             </v-col>
         </v-row>
         <v-row>

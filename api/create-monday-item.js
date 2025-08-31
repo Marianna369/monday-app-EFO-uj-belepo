@@ -20,7 +20,7 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': process.env.VITE_MARIANNA_API_TOKEN
+        'Authorization': process.env.VITE_ADMIN_API_TOKEN
       },
       body: JSON.stringify({ query }),
     });

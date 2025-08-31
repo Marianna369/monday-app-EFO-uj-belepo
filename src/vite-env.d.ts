@@ -13,7 +13,7 @@ interface ImportMetaEnv {
   readonly VITE_COLUMN_ID_SZULETESI_IDO: string;
   readonly VITE_COLUMN_ID_SZULETESI_HELY: string;
   readonly VITE_COLUMN_ID_EFO_IGENYLO: string;
-  readonly VITE_COLUMN_ID_EFO_JOVAHAGYO: string;
+  //readonly VITE_COLUMN_ID_EFO_JOVAHAGYO: string;
   readonly VITE_COLUMN_ID_MUNKAKOR: string;
   readonly VITE_COLUMN_ID_KOLTSEGHELY: string;
   readonly VITE_COLUMN_ID_SZULETESI_NEV: string;

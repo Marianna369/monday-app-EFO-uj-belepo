@@ -21,7 +21,7 @@ onMounted(async () => {
     Szuletesi_hely: {ColumnId: 'VITE_COLUMN_ID_SZULETESI_HELY', ColumnValue: "", ColumnType: ColumnType.String, ColumnValid: false},
     //EFO_igenylo: {ColumnId: 'VITE_COLUMN_ID_EFO_IGENYLO', ColumnValue:  {caption: me.name, value: me.email}, ColumnType: ColumnType.User},
     EFO_igenylo: {ColumnId: 'VITE_COLUMN_ID_EFO_IGENYLO', ColumnValue:  {caption: "", value: ""}, ColumnType: ColumnType.User, ColumnValid: false},
-    EFO_jovahagyo: {ColumnId: 'VITE_COLUMN_ID_EFO_JOVAHAGYO', ColumnValue: [], ColumnType: ColumnType.User, ColumnValid: false},
+    //EFO_jovahagyo: {ColumnId: 'VITE_COLUMN_ID_EFO_JOVAHAGYO', ColumnValue: [], ColumnType: ColumnType.User, ColumnValid: false},
     Munkakor: {ColumnId: 'VITE_COLUMN_ID_MUNKAKOR', ColumnValue:  {caption: "", value: ""}, ColumnType: ColumnType.Dropdown, ColumnValid: false},
     Koltseghely: {ColumnId: 'VITE_COLUMN_ID_KOLTSEGHELY', ColumnValue:  {caption: "", value: ""}, ColumnType: ColumnType.Dropdown, ColumnValid: false},    
     Szuletesi_nev: {ColumnId: 'VITE_COLUMN_ID_SZULETESI_NEV', ColumnValue: "", ColumnType: ColumnType.String, ColumnValid: false},
