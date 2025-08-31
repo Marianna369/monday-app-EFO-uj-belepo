@@ -241,45 +241,39 @@ const MondayApi = {
     return response.data.me;
   },
 
-  getFilteredKoltseghelyek: async (
-    boardId: number,
-    columnId: string,
-    searchTerm: string
-  ): Promise<DropdownOption[]> => {
-    const query = `
-      query {
-        items_by_column_values(
-          board_id: ${boardId},
-          column_id: "${columnId}",
-          column_value: "${searchTerm}"
-        ) {
-          id
-          name
-          column_values {
-            id
-            text
-            value
-          }
+    getFilteredKoltseghelyek: async (boardId: number, columnId: string, searchTerm: string): Promise<DropdownOption[]> => {
+        if (!searchTerm || searchTerm.trim().length < 2) {
+            return [];
         }
-      }
-    `;
 
-    const response = await monday.api(query);
-    const items = response?.data?.items_by_column_values ?? [];
+        const query = `
+            query {
+                items_by_column_values(
+                    board_id: ${boardId},
+                    column_id: "${columnId}",
+                    column_value: "${searchTerm}"
+                ) {
+                    id
+                    name
+                    column_values {
+                        id
+                        text
+                        value
+                    }
+                }
+            }
+        `;
 
-    return items.map((item: any) => ({
-      value: item.id,
-      caption: item.name,
-      additionalInfo:
-        item.column_values.find(
-          (v: any) => v.id === import.meta.env.VITE_COLUMN_ID_EFO_IGENYLO_KTG
-        )?.text ?? "",
-      thumb:
-        item.column_values.find(
-          (v: any) => v.id === import.meta.env.VITE_COLUMN_ID_EFO_JOVAHAGYO_KTG
-        )?.text ?? "",
-    }));
-  },
+        const result = await monday.api(query);
+        const items = result?.data?.items_by_column_values ?? [];
+
+        return items.map((item: any) => ({
+            value: item.id,
+            caption: item.name,
+            additionalInfo: item.column_values.find((v: any) => v.id === import.meta.env.VITE_COLUMN_ID_EFO_IGENYLO_KTG)?.text ?? "",
+            thumb: item.column_values.find((v: any) => v.id === import.meta.env.VITE_COLUMN_ID_EFO_JOVAHAGYO_KTG)?.text ?? ""
+        })) as DropdownOption[];
+    },
 
   changeMainBoardItem: async (
     structure: MainBoardStructure,
