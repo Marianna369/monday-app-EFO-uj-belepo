@@ -4,7 +4,6 @@ import TextField from './formElements/TextField.vue';
 import DatePicker from './formElements/DatePicker.vue';
 import Dropdown from './formElements/Dropdown.vue';
 import { computed, reactive, onMounted } from 'vue';
-import DropdownMultiple from './formElements/DropdownMultiple.vue';
 import MondayApi from '@/plugins/MondayApi';
 
 const props = defineProps<{
@@ -207,14 +206,23 @@ const onKoltseghelySearch = async (searchText: string) => {
 
     state.isLoading = true;
     try {
-        const response = await fetch(`/api/koltseghelyek?search=${encodeURIComponent(searchText)}`);
+        const response = await fetch('/api/koltseghelyek', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ search: searchText }),
+        });
+
         if (!response.ok) {
-            throw new Error(`Sikertelen lekérdezés: ${response.statusText}`);
+            // Hibás válasz esetén a szöveg logolása segíthet a hibakeresésben
+            const text = await response.text();
+            throw new Error(`Sikertelen lekérdezés: ${response.status} - ${text}`);
         }
 
         const data = await response.json();
 
-        // Alakítsd át az adatokat a dropdown elvárásainak megfelelően
+        // Feltételezve, hogy a data egy tömb, ezt igazítsd az API-d szerint
         state.koltseghelyOptions = data.map((item: any) => ({
             caption: item.caption,
             value: item.value,
