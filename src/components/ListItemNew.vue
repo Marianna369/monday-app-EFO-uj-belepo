@@ -206,7 +206,7 @@ const onKoltseghelySearch = async (searchText: string) => {
 
     state.isLoading = true;
     try {
-        const response = await fetch('/api/koltseghelyek', {
+        const response = await fetch('https://monday-app-efo-uj-belepo.vercel.app/api/create-monday-item', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
