@@ -24,7 +24,7 @@ export default async function handler(req, res) {
       method: 'POST', // Monday API mindig POST-ot vár
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': process.env.VITE_ADMIN_API_TOKEN || ''
+        'Authorization': process.env.MONDAY_API_TOKEN || ''
       },
       body: JSON.stringify({ query }),
     });
