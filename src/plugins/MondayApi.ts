@@ -248,31 +248,49 @@ const MondayApi = {
 
         const query = `
             query {
-                items_by_column_values(
-                    board_id: ${boardId},
+                boards (ids: ${boardId}) {
+                items_page (query_params: {
+                    rules: [{
                     column_id: "${columnId}",
-                    column_value: "${searchTerm}"
-                ) {
+                    compare_value: ["${searchTerm}"],
+                    operator: contains_text
+                    }]
+                }) {
+                    cursor
+                    items {
                     id
                     name
-                    column_values {
-                        id
-                        text
-                        value
                     }
                 }
+                }
             }
-        `;
+            `;
 
-        const result = await monday.api(query);
-        const items = result?.data?.items_by_column_values ?? [];
 
-        return items.map((item: any) => ({
-            value: item.id,
-            caption: item.name,
-            additionalInfo: item.column_values.find((v: any) => v.id === import.meta.env.VITE_COLUMN_ID_EFO_IGENYLO_KTG)?.text ?? "",
-            thumb: item.column_values.find((v: any) => v.id === import.meta.env.VITE_COLUMN_ID_EFO_JOVAHAGYO_KTG)?.text ?? ""
-        })) as DropdownOption[];
+        //const result = await monday.api(query);
+        const response = await fetch('https://monday-app-efo-uj-belepo.vercel.app/api/create-monday-item', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: query,
+        });
+
+        if (!response.ok) {
+            // Hibás válasz esetén a szöveg logolása segíthet a hibakeresésben
+            const text = await response.text();
+            throw new Error(`Sikertelen lekérdezés: ${response.status} - ${text}`);
+        }
+
+        const data = await response.json();
+        //const items = data?.items_by_column_values ?? [];
+
+        return data.map((item: any) => ({
+            caption: item.caption,
+            value: item.value,
+            additionalInfo: item.additionalInfo || "",
+        }))as DropdownOption[];
+        
     },
 
   changeMainBoardItem: async (

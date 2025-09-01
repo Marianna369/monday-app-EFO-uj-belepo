@@ -199,6 +199,8 @@ const onMunkakorChange = (columnId: string, newValue: string) => {
 }
 
 const onKoltseghelySearch = async (searchText: string) => {
+    console.log("Költséghely keresés indul...")
+    console.log(searchText);
     if (!searchText || searchText.length < 2) {
         state.koltseghelyOptions = [];
         return;
@@ -206,28 +208,10 @@ const onKoltseghelySearch = async (searchText: string) => {
 
     state.isLoading = true;
     try {
-        const response = await fetch('https://monday-app-efo-uj-belepo.vercel.app/api/create-monday-item', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ search: searchText }),
-        });
-
-        if (!response.ok) {
-            // Hibás válasz esetén a szöveg logolása segíthet a hibakeresésben
-            const text = await response.text();
-            throw new Error(`Sikertelen lekérdezés: ${response.status} - ${text}`);
-        }
-
-        const data = await response.json();
+        console.log("Itt kéne vmi response...")
 
         // Feltételezve, hogy a data egy tömb, ezt igazítsd az API-d szerint
-        state.koltseghelyOptions = data.map((item: any) => ({
-            caption: item.caption,
-            value: item.value,
-            additionalInfo: item.additionalInfo || "",
-        }));
+        state.koltseghelyOptions = await MondayApi.getFilteredKoltseghelyek(import.meta.env.VITE_KTGHELY_TABLE_ID, import.meta.env.VITE_COLUMN_ID_KOLTSEGHELY,searchText);
     } catch (error) {
         console.error("Költséghely keresési hiba:", error);
         state.koltseghelyOptions = [];

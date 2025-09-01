@@ -23,6 +23,7 @@ interface ImportMetaEnv {
   readonly VITE_COLUMN_ID_TAJSZAM: string;
   readonly VITE_COLUMN_ID_BANKSZAMLASZAM: string;
 
+  readonly VITE_KTGHELY_TABLE_ID: number;
   readonly VITE_COLUMN_ID_EFO_IGENYLO_KTG: string;
   readonly VITE_COLUMN_ID_EFO_JOVAHAGYO_KTG: string;
   readonly VITE_MARIANNA_API_TOKEN: string;
