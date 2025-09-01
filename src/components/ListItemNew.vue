@@ -211,7 +211,7 @@ const onKoltseghelySearch = async (searchText: string) => {
         console.log("Itt kéne vmi response...")
 
         // Feltételezve, hogy a data egy tömb, ezt igazítsd az API-d szerint
-        state.koltseghelyOptions = await MondayApi.getFilteredKoltseghelyek(import.meta.env.VITE_KTGHELY_TABLE_ID, import.meta.env.VITE_COLUMN_ID_KOLTSEGHELY,searchText);
+        state.koltseghelyOptions = await MondayApi.getFilteredKoltseghelyek(import.meta.env.VITE_KTGHELY_TABLE_ID, import.meta.env.VITE_COLUMN_ID_NAME,searchText);
     } catch (error) {
         console.error("Költséghely keresési hiba:", error);
         state.koltseghelyOptions = [];

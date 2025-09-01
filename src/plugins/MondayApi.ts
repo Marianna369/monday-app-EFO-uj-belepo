@@ -273,7 +273,7 @@ const MondayApi = {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: query,
+            body: JSON.stringify({ query }),
         });
 
         if (!response.ok) {
