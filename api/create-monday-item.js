@@ -20,6 +20,7 @@ export default async function handler(req, res) {
   }
 
   try {
+    console.log("Itt jön a token...")
     console.log(process.env.MONDAY_API_TOKEN);
     const response = await fetch('https://api.monday.com/v2', {
       method: 'POST', // Monday API mindig POST-ot vár
