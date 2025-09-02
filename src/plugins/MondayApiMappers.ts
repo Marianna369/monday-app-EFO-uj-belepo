@@ -7,7 +7,7 @@ export const mapBoardStructure = async (cols: { id: string; settings_str: string
         //EFO_jovahagyo: mapPeopleColumn(cols.find(x => x.id == import.meta.env.VITE_COLUMN_ID_EFO_JOVAHAGYO), users, teams),
         Munkakor: await mapDropdownColumn(cols.find(x => x.id == import.meta.env.VITE_COLUMN_ID_MUNKAKOR)!),
         Koltseghely: await mapBoardRelationColumn(cols.find(x => x.id == import.meta.env.VITE_COLUMN_ID_KOLTSEGHELY)!),
-        Szurt_koltseghely: await mapBoardRelationColumn(cols.find(x => x.id == import.meta.env.VITE_COLUMN_ID_KOLTSEGHELY)!)
+        //Szurt_koltseghely: await mapBoardRelationColumn(cols.find(x => x.id == import.meta.env.VITE_COLUMN_ID_KOLTSEGHELY)!)
     }
 }
 
@@ -138,6 +138,7 @@ const mapDropdownBoardItemValue = (column: DropdownColumn, item: MainBoardItemRa
     };
 }
 
+
 const mapConnectedBoardItemValue = (column: DropdownColumn, item: MainBoardItemRaw): ColumnValue<DropdownOption> => {
     // id based
     
@@ -157,6 +158,7 @@ const mapConnectedBoardItemValue = (column: DropdownColumn, item: MainBoardItemR
         ColumnValid: true
     };
 }
+
 
 const mapUserBoardItemValue = (column: DropdownColumn, item: MainBoardItemRaw): ColumnValue<DropdownOption> => {
     let option: DropdownOption = null;

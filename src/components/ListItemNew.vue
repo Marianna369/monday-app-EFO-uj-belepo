@@ -175,10 +175,10 @@ const BankszamlaszamEll = (columnValue: string) => {
 const onEFO_igenyloChange = (columnId: string, newValue: string) => {
     const column = Object.values(props.item).find(x => x && x.ColumnId == columnId);
     column.ColumnValue=props.structure.EFO_igenylo.options.filter(x => x.value == newValue)[0];
-    let teams = props.structure.EFO_igenylo.options.filter(x => x.value == newValue)[0].teams;
+    //let teams = props.structure.EFO_igenylo.options.filter(x => x.value == newValue)[0].teams;
 
-    props.structure.Szurt_koltseghely.options = props.structure.Koltseghely.options.filter(x => teams.find(t => t.name == x.additionalInfo));
-    props.item.Koltseghely = {ColumnId: 'VITE_COLUMN_ID_KOLTSEGHELY', ColumnValue:  {caption: "", value: "", color:"", teams:[], thumb:"", additionalInfo:""}, ColumnType: ColumnType.Dropdown, ColumnValid: false};
+    //props.structure.Szurt_koltseghely.options = props.structure.Koltseghely.options.filter(x => teams.find(t => t.name == x.additionalInfo));
+    //props.item.Koltseghely = {ColumnId: 'VITE_COLUMN_ID_KOLTSEGHELY', ColumnValue:  {caption: "", value: "", color:"", teams:[], thumb:"", additionalInfo:""}, ColumnType: ColumnType.Dropdown, ColumnValid: false};
 }
 
 const onKoltseghelyChange = (columnId: string, newValue: string) => {

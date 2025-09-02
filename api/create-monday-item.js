@@ -1,32 +1,34 @@
 export default async function handler(req, res) {
   // CORS beállítások
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  if (!['POST'].includes(req.method)) {
+  if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  // Lekérdezés kinyerése POST vagy GET esetén
-  const query = req.method === 'POST' ? req.body.query : req.query.query;
+  const query = req.body?.query;
 
   if (!query) {
     return res.status(400).json({ error: 'Missing query parameter' });
   }
 
   try {
-    console.log("Itt jön a token...")
-    console.log(process.env.MONDAY_API_TOKEN);
+    // Lokális fejlesztésnél hasznos lehet
+    if (process.env.NODE_ENV !== 'production') {
+      console.log("Monday API token (NE hagyd bent éles környezetben):", process.env.MONDAY_API_TOKEN);
+    }
+
     const response = await fetch('https://api.monday.com/v2', {
-      method: 'POST', // Monday API mindig POST-ot vár
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': process.env.MONDAY_API_TOKEN || ''
+        'Authorization': `Bearer ${process.env.MONDAY_API_TOKEN}`,
       },
       body: JSON.stringify({ query }),
     });
@@ -45,6 +47,7 @@ export default async function handler(req, res) {
     }
 
     return res.status(200).json(data);
+
   } catch (error) {
     console.error('Fetch error:', error);
     return res.status(500).json({ error: error.message || 'Internal Server Error' });

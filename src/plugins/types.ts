@@ -29,7 +29,7 @@ export interface MainBoardStructure {
     //EFO_jovahagyo: DropdownColumn;
     Munkakor: DropdownColumn;
     Koltseghely: DropdownColumn;
-    Szurt_koltseghely: DropdownColumn;
+    //Szurt_koltseghely: DropdownColumn;
 }
 
 export interface SimpleBoardItem {
