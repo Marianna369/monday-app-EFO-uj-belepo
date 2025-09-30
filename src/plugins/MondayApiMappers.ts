@@ -1,4 +1,3 @@
-import MondayApi from "./MondayApi";
 import { MainBoardStructure, ColumnValue, DropdownColumn, DropdownOption, MainBoardItem, MainBoardItemRaw, ColumnType, Attachment } from "./types";
 
 export const mapBoardStructure = async (cols: { id: string; settings_str: string; }[], users: { id: string; name: string; email:string, teams: { id: string; name: string;}[], photo_thumb_small: string}[], teams: { id: string; name: string; picture_url: string;}[]): Promise<MainBoardStructure> => {
@@ -6,7 +5,8 @@ export const mapBoardStructure = async (cols: { id: string; settings_str: string
         EFO_igenylo: mapPeopleColumn(cols.find(x => x.id == import.meta.env.VITE_COLUMN_ID_EFO_IGENYLO), users, []),
         //EFO_jovahagyo: mapPeopleColumn(cols.find(x => x.id == import.meta.env.VITE_COLUMN_ID_EFO_JOVAHAGYO), users, teams),
         Munkakor: await mapDropdownColumn(cols.find(x => x.id == import.meta.env.VITE_COLUMN_ID_MUNKAKOR)!),
-        Koltseghely: await mapBoardRelationColumn(cols.find(x => x.id == import.meta.env.VITE_COLUMN_ID_KOLTSEGHELY)!),
+        Koltseghely: {id: import.meta.env.VITE_COLUMN_ID_KOLTSEGHELY, isConnectedBoard: true, isPersonOrTeam: false, options: [] }
+        //Koltseghely: await mapBoardRelationColumn(cols.find(x => x.id == import.meta.env.VITE_COLUMN_ID_KOLTSEGHELY)!),
         //Szurt_koltseghely: await mapBoardRelationColumn(cols.find(x => x.id == import.meta.env.VITE_COLUMN_ID_KOLTSEGHELY)!)
     }
 }
@@ -29,6 +29,7 @@ const mapDropdownColumn = (source:{id:string,settings_str:string}) : DropdownCol
     return column;
 }
 
+/*
 const mapBoardRelationColumn = async (source:{id:string,settings_str:string}) : Promise<DropdownColumn> => {  
     const settings = JSON.parse(source.settings_str);
     const values = await MondayApi.getFullBoardItems(settings.boardIds);
@@ -46,6 +47,7 @@ const mapBoardRelationColumn = async (source:{id:string,settings_str:string}) : 
         })
     }
 }
+*/
 
 const mapPeopleColumn = (source:{id:string,settings_str:string}, users: {id:string, name:string, email:string, teams: { id: string; name: string;}[], photo_thumb_small: string}[], teams: { id: string; name: string; picture_url: string;}[]): DropdownColumn => {
 

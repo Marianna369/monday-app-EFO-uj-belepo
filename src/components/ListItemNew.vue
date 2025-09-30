@@ -180,11 +180,23 @@ const onEFO_igenyloChange = (columnId: string, newValue: string) => {
     //props.structure.Szurt_koltseghely.options = props.structure.Koltseghely.options.filter(x => teams.find(t => t.name == x.additionalInfo));
     //props.item.Koltseghely = {ColumnId: 'VITE_COLUMN_ID_KOLTSEGHELY', ColumnValue:  {caption: "", value: "", color:"", teams:[], thumb:"", additionalInfo:""}, ColumnType: ColumnType.Dropdown, ColumnValid: false};
 }
-
+/*
 const onKoltseghelyChange = (columnId: string, newValue: string) => {
     const column = Object.values(props.item).find(x => x && x.ColumnId == columnId);
     column.ColumnValue=props.structure.Koltseghely.options.filter(x => x.value == newValue)[0];
 }
+*/
+
+const onKoltseghelyChange = (columnId: string, newValue: string) => {
+    const column = Object.values(props.item).find(x => x && x.ColumnId === columnId);
+    if (!column) return;
+
+    const selected = state.koltseghelyOptions.find(x => x.value === newValue);
+    if (selected) {
+        column.ColumnValue = selected;
+        column.ColumnValid = true;
+    }
+};
 
 /*
 const onEFO_jovahagyoChange = (columnId: string, newValue: string[]) => {
@@ -211,7 +223,10 @@ const onKoltseghelySearch = async (searchText: string) => {
         console.log("Itt kéne vmi response...")
 
         // Feltételezve, hogy a data egy tömb, ezt igazítsd az API-d szerint
-        state.koltseghelyOptions = await MondayApi.getFilteredKoltseghelyek(import.meta.env.VITE_KTGHELY_TABLE_ID, import.meta.env.VITE_COLUMN_ID_NAME,searchText);
+        const result = await MondayApi.getFilteredKoltseghelyek(import.meta.env.VITE_KTGHELY_TABLE_ID, import.meta.env.VITE_COLUMN_ID_NAME,searchText);
+        state.koltseghelyOptions = Array.isArray(result) ? result : [];
+
+        //state.koltseghelyOptions = await MondayApi.getFilteredKoltseghelyek(import.meta.env.VITE_KTGHELY_TABLE_ID, import.meta.env.VITE_COLUMN_ID_NAME,searchText);
     } catch (error) {
         console.error("Költséghely keresési hiba:", error);
         state.koltseghelyOptions = [];

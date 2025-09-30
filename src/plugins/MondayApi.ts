@@ -241,56 +241,56 @@ const MondayApi = {
     return response.data.me;
   },
 
-    getFilteredKoltseghelyek: async (boardId: number, columnId: string, searchTerm: string): Promise<DropdownOption[]> => {
-        if (!searchTerm || searchTerm.trim().length < 2) {
-            return [];
-        }
+    getFilteredKoltseghelyek: async (
+    boardId: number,
+    columnId: string,
+    searchTerm: string
+    ): Promise<DropdownOption[]> => {
+    if (!searchTerm || searchTerm.trim().length < 2) {
+        return [];
+    }
 
-        const query = `
-            query {
-                boards (ids: ${boardId}) {
-                items_page (query_params: {
-                    rules: [{
-                    column_id: "${columnId}",
-                    compare_value: ["${searchTerm}"],
-                    operator: contains_text
-                    }]
-                }) {
-                    cursor
-                    items {
-                    id
-                    name
-                    }
-                }
-                }
+    const query = `
+        query {
+        boards (ids: ${boardId}) {
+            items_page (query_params: {
+            rules: [{
+                column_id: "${columnId}",
+                compare_value: ["${searchTerm}"],
+                operator: contains_text
+            }]
+            }) {
+            cursor
+            items {
+                id
+                name
             }
-            `;
-
-
-        //const result = await monday.api(query);
-        const response = await fetch('https://monday-app-efo-uj-belepo.vercel.app/api/create-monday-item', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ query }),
-        });
-
-        if (!response.ok) {
-            // Hibás válasz esetén a szöveg logolása segíthet a hibakeresésben
-            const text = await response.text();
-            throw new Error(`Sikertelen lekérdezés: ${response.status} - ${text}`);
+            }
         }
+        }
+    `;
 
-        const data = await response.json();
-        //const items = data?.items_by_column_values ?? [];
+    const response = await fetch('https://monday-app-efo-uj-belepo.vercel.app/api/create-monday-item', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query }),
+    });
 
-        return data.map((item: any) => ({
-            caption: item.caption,
-            value: item.value,
-            additionalInfo: item.additionalInfo || "",
-        }))as DropdownOption[];
-        
+    if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Sikertelen lekérdezés: ${response.status} - ${text}`);
+    }
+
+    const json = await response.json();
+    const items = json?.data?.boards?.[0]?.items_page?.items ?? [];
+
+    return items.map((item: any) => ({
+        caption: item.name,
+        value: item.id,
+        additionalInfo: "", // vagy ha van extra adat, itt adhatod meg
+    })) as DropdownOption[];
     },
 
   changeMainBoardItem: async (
